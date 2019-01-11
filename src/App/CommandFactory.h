@@ -5,15 +5,16 @@
 #ifndef LABSOS_LABFACTORY_H
 #define LABSOS_LABFACTORY_H
 
-#include "Labs/ILab.h"
+#include "Commands/ICommand.h"
 #include <vector>
+#include <string>
 
-class LabFactory {
+class CommandFactory {
 public:
-    ILab* create(int id);
+    ICommand* create(std::string id);
 
 private:
-    std::vector<ILab*> getLabs();
+    std::vector<ICommand*> getCommands();
 };
 
 

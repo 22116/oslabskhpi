@@ -6,18 +6,18 @@
 #define LABSOS_ENCODINGSWITCHER_H
 
 
-#include "ILab.h"
+#include "ICommand.h"
 #include "../../Core/File/FileReader.h"
 #include "../../Core/File/FileWriter.h"
 #include <locale>
 
-class EncodingSwitcher : public ILab {
-    int getId() override;
-    void execute(char* argv[]) override;
-
-
+class EncodingSwitcher : public ICommand {
 public:
     explicit EncodingSwitcher(FileReader* fileReader, FileWriter* fileWriter);
+    std::string getId() override;
+    void execute(ArgumentFetcher* argumentFetcher) override;
+    bool verify(ArgumentFetcher *argumentFetcher) override;
+    void showHelp() override;
 
 private:
     FileReader* fileReader;
