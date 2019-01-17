@@ -7,11 +7,20 @@
 
 
 #include "ICommand.h"
+#include "../../Core/File/FileReader.h"
+#include "../../Core/Directory/Explorer.h"
+#include "../../Core/String/Searcher.h"
 
 # define NO_OF_CHARS 256
 
 class SubstringSearcher : public ICommand {
+private:
+    FileReader* fileReader;
+    Explorer* explorer;
+    Searcher* searcher;
+
 public:
+    SubstringSearcher(FileReader* fileReader, Explorer* explorer, Searcher* searcher);
     std::string getId() override;
     void execute(ArgumentFetcher* argumentFetcher) override;
     bool verify(ArgumentFetcher *argumentFetcher) override;

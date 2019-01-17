@@ -34,7 +34,6 @@ void App::run() {
     if (command->verify(argumentFetcher)) {
         try {
             command->execute(argumentFetcher);
-            std::cout << " Operation completed successfuly. Exit.";
         } catch (InvalidEncodingException &err) {
             std::cout << err.what() << std::endl;
         }

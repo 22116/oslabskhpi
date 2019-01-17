@@ -20,15 +20,24 @@ void SubstringSearcher::execute(ArgumentFetcher* argumentFetcher) {
     path = argumentFetcher->isArgumentExists("path")
            ? argumentFetcher->getArgument("path") : argumentFetcher->getArgument(1);
 
-    str = argumentFetcher->isArgumentExists("string")
-           ? argumentFetcher->getArgument("string") : argumentFetcher->getArgument(2);
+    str = argumentFetcher->isArgumentExists("pattern")
+           ? argumentFetcher->getArgument("pattern") : argumentFetcher->getArgument(2);
 
+    auto files = this->explorer->getFileList(path);
 
+    for (auto &filePath: files) {
+        auto content = this->fileReader->getFileContent((char*)filePath.c_str());
+        auto result = this->searcher->find(content, str);
+
+        if (result != -1) {
+            std::cout << " Found in '" << filePath << "', position '" << result << "'\n";
+        }
+    }
 }
 
 bool SubstringSearcher::verify(ArgumentFetcher *argumentFetcher) {
     return  (argumentFetcher->isArgumentExists("path") || argumentFetcher->isArgumentExists(1)) &&
-            (argumentFetcher->isArgumentExists("string") || argumentFetcher->isArgumentExists(2));
+            (argumentFetcher->isArgumentExists("pattern") || argumentFetcher->isArgumentExists(2));
 }
 
 std::string SubstringSearcher::getHelp() {
@@ -36,9 +45,15 @@ std::string SubstringSearcher::getHelp() {
 
            + " Arguments:\n"
            + "     path   - file path;\n"
-           + "     string - message to find;\n\n"
+           + "     pattern - message to find;\n\n"
 
            + " Examples:\n"
-           + "     ./command find-string path string\n"
-           + "     ./command find-string --path ./path --string 'hello world'\n";
+           + "     ./command find-string path pattern\n"
+           + "     ./command find-string --path ./path --pattern 'hello world'\n";
+}
+
+SubstringSearcher::SubstringSearcher(FileReader *fileReader, Explorer *explorer, Searcher* searcher) {
+    this->fileReader = fileReader;
+    this->explorer = explorer;
+    this->searcher = searcher;
 }
