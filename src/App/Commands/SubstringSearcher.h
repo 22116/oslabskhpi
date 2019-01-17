@@ -15,7 +15,7 @@ public:
     std::string getId() override;
     void execute(ArgumentFetcher* argumentFetcher) override;
     bool verify(ArgumentFetcher *argumentFetcher) override;
-    void showHelp() override;
+    std::string getHelp() override;
 };
 
 

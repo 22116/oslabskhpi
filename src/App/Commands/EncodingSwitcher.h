@@ -5,23 +5,24 @@
 #ifndef LABSOS_ENCODINGSWITCHER_H
 #define LABSOS_ENCODINGSWITCHER_H
 
-
 #include "ICommand.h"
 #include "../../Core/File/FileReader.h"
 #include "../../Core/File/FileWriter.h"
 #include <locale>
+#include "../../Core/File/EncodingFacade.h"
 
 class EncodingSwitcher : public ICommand {
 public:
-    explicit EncodingSwitcher(FileReader* fileReader, FileWriter* fileWriter);
+    explicit EncodingSwitcher(FileReader* fileReader, FileWriter* fileWriter, EncodingFacade* encodingFacade);
     std::string getId() override;
     void execute(ArgumentFetcher* argumentFetcher) override;
     bool verify(ArgumentFetcher *argumentFetcher) override;
-    void showHelp() override;
+    std::string getHelp() override;
 
 private:
     FileReader* fileReader;
     FileWriter* fileWriter;
+    EncodingFacade* encodingFacade;
 };
 
 

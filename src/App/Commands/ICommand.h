@@ -11,5 +11,5 @@ public:
     virtual std::string getId() = 0;
     virtual void execute(ArgumentFetcher* argumentFetcher) = 0;
     virtual bool verify(ArgumentFetcher* argumentFetcher) = 0;
-    virtual void showHelp() = 0;
+    virtual std::string getHelp() = 0;
 };

@@ -34,7 +34,7 @@ bool ArgumentFetcher::isOptionExists(std::string option) {
 }
 
 bool ArgumentFetcher::isArgumentExists(int index) {
-    return this->getArgumentFormattedTokens().size() >= index;
+    return this->getArgumentFormattedTokens().size() > index;
 }
 
 bool ArgumentFetcher::isArgumentExists(std::string argument) {

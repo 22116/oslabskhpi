@@ -18,7 +18,7 @@ ICommand* CommandFactory::create(std::string id) {
         }
     }
 
-    throw InvalidCommandIdentifierException(
+    throw InvalidEncodingException(
             "Invalid command identifier.\nAvailable commands:" + list
         );
 }
@@ -26,7 +26,7 @@ ICommand* CommandFactory::create(std::string id) {
 std::vector<ICommand*> CommandFactory::getCommands() {
     std::vector<ICommand*> list;
 
-    list.push_back(new EncodingSwitcher(new FileReader, new FileWriter));
+    list.push_back(new EncodingSwitcher(new FileReader, new FileWriter, new EncodingFacade));
     list.push_back(new SubstringSearcher());
 
     return list;

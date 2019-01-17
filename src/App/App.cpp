@@ -26,16 +26,22 @@ void App::run() {
 
     try {
         command = commandFactory->create(commandIdentifier);
-    } catch (InvalidCommandIdentifierException &err) {
+    } catch (InvalidEncodingException &err) {
         std::cout << err.what() << std::endl;
         return;
     }
 
     if (command->verify(argumentFetcher)) {
-        command->execute(argumentFetcher);
+        try {
+            command->execute(argumentFetcher);
+            std::cout << " Operation completed successfuly. Exit.";
+        } catch (InvalidEncodingException &err) {
+            std::cout << err.what() << std::endl;
+        }
+
     } else {
-        std::cout << "Invalid params for '" << command->getId() << "' command." << std::endl;
-        command->showHelp();
+        std::cout << " Invalid params for '" << command->getId() << "' command." << std::endl << std::endl;
+        std::cout << command->getHelp();
     }
 
     std::cout << std::endl;

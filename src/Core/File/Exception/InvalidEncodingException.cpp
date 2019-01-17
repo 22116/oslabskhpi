@@ -2,7 +2,7 @@
 // Created by victor on 1/11/19.
 //
 
-#include "InvalidCommandIdentifierException.h"
+#include "InvalidEncodingException.h"
 
 InvalidEncodingException::InvalidEncodingException(std::string message) {
     this->message = message;

@@ -15,13 +15,30 @@ std::string SubstringSearcher::getId() {
 }
 
 void SubstringSearcher::execute(ArgumentFetcher* argumentFetcher) {
-    
+    std::string path, str;
+
+    path = argumentFetcher->isArgumentExists("path")
+           ? argumentFetcher->getArgument("path") : argumentFetcher->getArgument(1);
+
+    str = argumentFetcher->isArgumentExists("string")
+           ? argumentFetcher->getArgument("string") : argumentFetcher->getArgument(2);
+
+
 }
 
 bool SubstringSearcher::verify(ArgumentFetcher *argumentFetcher) {
-    return false;
+    return  (argumentFetcher->isArgumentExists("path") || argumentFetcher->isArgumentExists(1)) &&
+            (argumentFetcher->isArgumentExists("string") || argumentFetcher->isArgumentExists(2));
 }
 
-void SubstringSearcher::showHelp() {
+std::string SubstringSearcher::getHelp() {
+    return std::string() + " Help. This command searches for pattern in directory recursively.\n\n"
 
+           + " Arguments:\n"
+           + "     path   - file path;\n"
+           + "     string - message to find;\n\n"
+
+           + " Examples:\n"
+           + "     ./command find-string path string\n"
+           + "     ./command find-string --path ./path --string 'hello world'\n";
 }
