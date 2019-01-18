@@ -11,6 +11,7 @@ std::string SubstringReplacer::getId() {
 
 void SubstringReplacer::execute(ArgumentFetcher *argumentFetcher) {
     std::string path, pattern, string;
+    bool isRegExp = argumentFetcher->isOptionExists("e");
 
     path = argumentFetcher->isArgumentExists("path")
            ? argumentFetcher->getArgument("path") : argumentFetcher->getArgument(1);
@@ -25,13 +26,23 @@ void SubstringReplacer::execute(ArgumentFetcher *argumentFetcher) {
 
     for (auto &filePath: files) {
         std::string content = this->fileReader->getFileContent((char*)filePath.c_str());
-        auto result = this->searcher->find(content, pattern);
 
-        if (result != -1) {
-            content.replace(static_cast<unsigned long>(result), pattern.length(), string);
-            this->fileWriter->putContent((char*)filePath.c_str(), (char*)content.c_str());
-            std::cout << " Replaced in '" << filePath << "', position '" << result << "'\n";
+
+        if (isRegExp) {
+            std::pair<int, int> result;
+            while ((result = this->searcher->findRegexp(content, pattern)).first != -1) {
+                content.replace(static_cast<unsigned long>(result.first), static_cast<unsigned long>(result.second), string);
+                std::cout << " Replaced in '" << filePath << "', position '" << result.first << "'\n";
+            }
+        } else {
+            int result;
+            while ((result = this->searcher->find(content, pattern)) != -1) {
+                content.replace(static_cast<unsigned long>(result), pattern.length(), string);
+                std::cout << " Replaced in '" << filePath << "', position '" << result << "'\n";
+            }
         }
+
+        this->fileWriter->putContent((char*)filePath.c_str(), (char*)content.c_str());
     }
 }
 
@@ -48,6 +59,9 @@ std::string SubstringReplacer::getHelp() {
            + "     path    - file path;\n"
            + "     pattern - message to find;\n"
            + "     string  - message to replace;\n\n"
+
+           + " Options:\n"
+           + "     e       - use regexp\n\n"
 
            + " Examples:\n"
            + "     ./command replace-string path pattern string\n"

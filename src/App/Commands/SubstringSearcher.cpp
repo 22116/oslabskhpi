@@ -16,6 +16,7 @@ std::string SubstringSearcher::getId() {
 
 void SubstringSearcher::execute(ArgumentFetcher* argumentFetcher) {
     std::string path, str;
+    bool isRegExp = argumentFetcher->isOptionExists("e");
 
     path = argumentFetcher->isArgumentExists("path")
            ? argumentFetcher->getArgument("path") : argumentFetcher->getArgument(1);
@@ -27,7 +28,7 @@ void SubstringSearcher::execute(ArgumentFetcher* argumentFetcher) {
 
     for (auto &filePath: files) {
         auto content = this->fileReader->getFileContent((char*)filePath.c_str());
-        auto result = this->searcher->find(content, str);
+        auto result = isRegExp ? this->searcher->find(content, str) : this->searcher->findRegexp(content, str).first;
 
         if (result != -1) {
             std::cout << " Found in '" << filePath << "', position '" << result << "'\n";
@@ -46,6 +47,9 @@ std::string SubstringSearcher::getHelp() {
            + " Arguments:\n"
            + "     path   - file path;\n"
            + "     pattern - message to find;\n\n"
+
+           + " Options:\n"
+           + "     e       - use regexp\n\n"
 
            + " Examples:\n"
            + "     ./command find-string path pattern\n"

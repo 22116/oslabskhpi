@@ -27,11 +27,12 @@ ICommand* CommandFactory::create(std::string id) {
 
 std::vector<ICommand*> CommandFactory::getCommands() {
     std::vector<ICommand*> list;
+    IStrategy* strategy = new UnixStrategy;
 
     list.push_back(new EncodingSwitcher(new FileReader, new FileWriter, new EncodingFacade));
-    list.push_back(new SubstringSearcher(new FileReader, new Explorer(new UnixStrategy), new Searcher));
+    list.push_back(new SubstringSearcher(new FileReader, new Explorer(strategy), new Searcher));
     list.push_back(new SubstringReplacer(
-            new FileReader, new FileWriter, new Explorer(new UnixStrategy), new Searcher)
+            new FileReader, new FileWriter, new Explorer(strategy), new Searcher)
     );
 
     return list;

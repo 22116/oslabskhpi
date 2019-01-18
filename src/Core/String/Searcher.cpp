@@ -1,3 +1,9 @@
+#include <utility>
+
+#include <utility>
+
+#include <utility>
+
 //
 // Created by victor on 1/15/19.
 //
@@ -5,6 +11,7 @@
 #include <iostream>
 #include <map>
 #include "Searcher.h"
+#include "RegExp/RegExp.h"
 
 std::vector<int> Searcher::buildSuffTable(std::string s) {
     std::vector<int> p(s.length());
@@ -24,6 +31,28 @@ std::vector<int> Searcher::buildSuffTable(std::string s) {
 }
 
 int Searcher::find(std::string s, std::string t) {
+    auto res = this->search(s, t);
+
+    std::cout<<res;
+
+    if (res == -1) return res;
+
+    try {
+        for (int i = res, j = 0; i < res + t.length(); i++, j++) {
+            if (s[i] != t[j]) return -1;
+        }
+    } catch (...) {
+        return -1;
+    }
+
+    return res;
+}
+
+std::pair<int, int> Searcher::findRegexp(std::string source, std::string pattern) {
+    return (new RegExp(pattern))->match(source);
+}
+
+int Searcher::search(std::string s, std::string t) {
     if (s.length() < t.length()) {
         return -1;
     }
