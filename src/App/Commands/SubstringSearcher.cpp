@@ -24,16 +24,19 @@ void SubstringSearcher::execute(ArgumentFetcher* argumentFetcher) {
     str = argumentFetcher->isArgumentExists("pattern")
            ? argumentFetcher->getArgument("pattern") : argumentFetcher->getArgument(2);
 
-    auto files = this->explorer->getFileList(path);
+    this->explorer->explore(path, [&](std::string filePath) -> void {
+        this->fileReader->read(filePath, static_cast<int>(str.length() * 2), static_cast<int>(str.length() - 1),
+                [&](std::string buff) -> bool {
+                    auto result = !isRegExp ? this->searcher->find(buff, str) : this->searcher->findRegexp(buff, str).first;
 
-    for (auto &filePath: files) {
-        auto content = this->fileReader->getFileContent((char*)filePath.c_str());
-        auto result = isRegExp ? this->searcher->find(content, str) : this->searcher->findRegexp(content, str).first;
+                    if (result != -1) {
+                        std::cout << " Found in '" << filePath << "'" << std::endl;
+                        return true;
+                    }
 
-        if (result != -1) {
-            std::cout << " Found in '" << filePath << "', position '" << result << "'\n";
-        }
-    }
+                    return false;
+        });
+    });
 }
 
 bool SubstringSearcher::verify(ArgumentFetcher *argumentFetcher) {
@@ -45,7 +48,7 @@ std::string SubstringSearcher::getHelp() {
     return std::string() + " Help. This command searches for pattern in directory recursively.\n\n"
 
            + " Arguments:\n"
-           + "     path   - file path;\n"
+           + "     path    - file path;\n"
            + "     pattern - message to find;\n\n"
 
            + " Options:\n"

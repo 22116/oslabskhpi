@@ -12,6 +12,7 @@
 class Explorer {
 public:
     Explorer(IStrategy* strategy);
+    void explore(std::string path, std::function<void(std::string)> callback);
     std::vector<std::string> getFileList(std::string path);
 
 private:

@@ -29,19 +29,19 @@ RegExp::RegExp(std::string &pattern)  {
                 arr += std::string(1, pattern[i]);
             }
 
-            ++i;
-
             this->elems.emplace_back(new SwitcherEl(arr));
+            continue;
         }
 
         if (pattern[i] == '*') {
             IRegExpEl* nCh = new RangeEl(elems.back());
             this->elems.pop_back();
             this->elems.emplace_back(nCh);
+            continue;
         }
 
         if (pattern[i] == '\\' && i != pattern.length()) {
-            this->elems.emplace_back(new CharEl(std::string(1, pattern[i++ + 1])));
+            this->elems.emplace_back(new CharEl(std::string(1, pattern[++i])));
             continue;
         } else {
             this->elems.emplace_back(new CharEl(std::string(1, pattern[i])));
@@ -59,9 +59,9 @@ std::pair<int, int> RegExp::match(std::string &content) {
             len++;
             switch (this->elems[j]->type()) {
                 case REXP_CHAR: if (this->elems[j]->value()[0] != content[i + j]) found = false;
-                    continue;
+                    break;
                 case REXP_BOOL:
-                    continue;
+                    break;
                 case REXP_SWITCHER: {
                     auto switchers = this->elems[j]->value();
                     bool exists = false;
@@ -92,4 +92,5 @@ std::pair<int, int> RegExp::match(std::string &content) {
         }
     }
 
+    return std::pair<int,int>(-1, 0);
 }

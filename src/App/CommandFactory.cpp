@@ -7,8 +7,16 @@
 #include "Commands/EncodingSwitcher.h"
 #include "Commands/SubstringSearcher.h"
 #include "Exception/InvalidCommandIdentifierException.h"
-#include "../Core/Directory/Strategy/UnixStrategy.h"
 #include "Commands/SubstringReplacer.h"
+
+#ifdef __unix__
+#include "../Core/Directory/Strategy/UnixStrategy.h"
+#endif
+
+#ifdef OS_Windows
+#include "../Core/Directory/Strategy/WinStrategy.h"
+#endif
+
 
 ICommand* CommandFactory::create(std::string id) {
     std::string list;
@@ -27,7 +35,15 @@ ICommand* CommandFactory::create(std::string id) {
 
 std::vector<ICommand*> CommandFactory::getCommands() {
     std::vector<ICommand*> list;
-    IStrategy* strategy = new UnixStrategy;
+    IStrategy* strategy;
+
+    #ifdef __unix__
+    strategy = new UnixStrategy;
+    #endif
+
+    #ifdef OS_Windows
+    strategy = new WinStrategy;
+    #endif
 
     list.push_back(new EncodingSwitcher(new FileReader, new FileWriter, new EncodingFacade));
     list.push_back(new SubstringSearcher(new FileReader, new Explorer(strategy), new Searcher));

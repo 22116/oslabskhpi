@@ -9,6 +9,7 @@
 class FileWriter {
 public:
     void putContent(char* path, char* content);
+    void append(char *path, char *content);
 };
 
 

@@ -32,7 +32,7 @@ void EncodingSwitcher::execute(ArgumentFetcher* argumentFetcher) {
     to = argumentFetcher->isArgumentExists("to")
        ? argumentFetcher->getArgument("to") : argumentFetcher->getArgument(3);
 
-    std::string content = this->fileReader->getFileContent((char*)path.c_str());
+    std::string content = this->fileReader->read((char*)path.c_str());
 
     this->fileWriter->putContent((char*)path.c_str(), (char*)this->encodingFacade->encode(
             content, this->encodingFacade->parseEncoding(from), this->encodingFacade->parseEncoding(to)

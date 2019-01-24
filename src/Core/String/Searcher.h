@@ -16,7 +16,6 @@ public:
 
 private:
     std::vector<int> buildSuffTable(std::string source);
-    int search(std::string source, std::string pattern);
 };
 
 
