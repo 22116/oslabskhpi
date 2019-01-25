@@ -1,15 +1,10 @@
-#include <utility>
-
-#include <utility>
-
-#include <utility>
-
 //
 // Created by victor on 1/15/19.
 //
 
 #include <iostream>
 #include <map>
+#include <utility>
 #include "Searcher.h"
 #include "RegExp/RegExp.h"
 
@@ -82,4 +77,40 @@ int Searcher::find(std::string s, std::string t) {
 
 std::pair<int, int> Searcher::findRegexp(std::string source, std::string pattern) {
     return (new RegExp(pattern))->match(source);
+}
+
+std::string Searcher::findReplace(std::string &content, std::vector<std::pair<std::string, std::string>> matches) {
+    std::string buff;
+
+    for (int i = 0; i < content.length(); i++) {
+        bool isReplaced = false;
+
+        for (auto &match : matches) {
+            bool found = true;
+
+            if (content.length() - i < match.first.length()) {
+                continue;
+            }
+
+            for (int j = 0; j < match.first.length(); j++) {
+                if (match.first[j] != content[i + j]) {
+                    found = false;
+                    break;
+                }
+            }
+
+            if (found) {
+                buff += match.second;
+                i += match.first.length() - 1;
+                isReplaced = true;
+                break;
+            }
+        }
+
+        if (!isReplaced) {
+            buff += std::string(1, content[i]);
+        }
+    }
+
+    return buff;
 }

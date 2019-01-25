@@ -41,16 +41,11 @@ void SubstringReplacer::execute(ArgumentFetcher *argumentFetcher) {
     this->explorer->explore(path, [&](std::string filePath) -> void {
         std::string tmpName = filePath + std::string(".temp");
         this->fileReader->read(filePath, [&](std::string buff) -> bool {
-            for (auto &match : matches) {
-                std::pair<int, int> result;
+            buff = this->searcher->findReplace(buff, matches);
 
-                while ((result = this->searcher->findRegexp(buff, match.first)).first != -1) {
-                    buff.replace(static_cast<unsigned long>(result.first), static_cast<unsigned long>(result.second), match.second);
-                    std::cout << " Replaced in '" << filePath << "'" << std::endl;
-                }
-            }
-
-            this->fileWriter->append((char*)tmpName.c_str(), (char*)buff.c_str());
+            this->fileWriter->append(
+                    (char*)tmpName.c_str(), (char*)this->searcher->findReplace(buff, matches).c_str()
+                );
 
             return false;
         });

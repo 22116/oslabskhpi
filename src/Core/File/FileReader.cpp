@@ -30,7 +30,7 @@ std::string FileReader::read(std::string path) {
 }
 
 void FileReader::read(std::string path, const std::function<bool(std::string)> &callback) {
-    FILE* f = fopen(path.c_str(), "r");;
+    FILE* f = fopen(path.c_str(), "rb");;
     char* line = nullptr;
 
     if (f) {
@@ -49,15 +49,18 @@ void FileReader::read(std::string path, const std::function<bool(std::string)> &
 }
 
 void FileReader::read(std::string path, int buffSize, int disposition, const std::function<bool(std::string)> &callback) {
-    FILE * f = fopen(path.c_str(), "r");
+    FILE * f = fopen(path.c_str(), "rb");
 
     if (f)
     {
         std::string dBuffer;
         char* buffer = (char*)malloc(sizeof(char)*buffSize);
+        int len;
 
-        while (fread(buffer, sizeof(char), static_cast<size_t>(buffSize), f) != 0) {
-            if (callback(dBuffer + std::string(buffer))) {
+        while ((len = static_cast<int>(fread(buffer, sizeof(char), static_cast<size_t>(buffSize), f))) != 0) {
+            char tmp[len];
+            memcpy(tmp, buffer, static_cast<size_t>(len));
+            if (callback(dBuffer + std::string(tmp))) {
                 break;
             }
 
